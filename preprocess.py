@@ -1,7 +1,7 @@
 import os
 import argparse
 import random
-import preprocessors.libritts.Preprocessor as libritts
+import preprocessors.libritts as libritts
 
 
 def make_train_files(out_dir, datas):
