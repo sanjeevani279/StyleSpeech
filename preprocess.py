@@ -32,11 +32,11 @@ def make_folders(out_dir):
         os.makedirs(energy_out_dir, exist_ok=True)
 
 
-def main(data_dir, out_dir):
-    
-    libritts.write_metadata(data_dir, out_dir)
+def main(data_dir, out_dir, config_path):
+ 
+    libritts.Preprocessor(config_path).write_metadata(data_dir, out_dir)
     make_folders(out_dir)
-    datas = libritts.build_from_path(data_dir, out_dir)
+    datas = libritts.Preprocessor(config_path).build_from_path(data_dir, out_dir)
     make_train_files(out_dir, datas)
 
 
@@ -44,7 +44,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, default='dataset/')
     parser.add_argument('--output_path', type=str, default='dataset/')
-    #parser.add_argument('--config_path', type=str, default='configs/')
+    parser.add_argument('--config_path', type=str, default='configs/')
     args = parser.parse_args()
 
-    main(args.data_path, args.output_path)
+    main(args.data_path, args.output_path, args.config_path)
