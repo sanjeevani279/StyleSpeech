@@ -60,6 +60,24 @@ def prepare_align_and_resample(data_dir, sr):
     lengths = Parallel(n_jobs=10, verbose=1)(
         delayed(write_single)(wav[0], wav[1], wav[2], sr) for wav in wavs
     )
+    
+ def write_metadata(data_dir, out_dir):
+    metadata = os.path.join(out_dir, 'metadata.csv')
+    if not os.path.exists(metadata):
+        wav_fname_list = [str(f) for f in list(Path(data_dir).rglob('*.wav'))]
+        lines = []
+        for wav_fname in wav_fname_list:
+            basename = wav_fname.split('/')[-1].replace('.wav', '')
+            sid = wav_fname.split('/')[-2]
+            assert sid in basename
+            txt_fname = wav_fname.replace('.wav', '.txt')
+            with open(txt_fname, 'r') as f:
+                text = f.readline().strip()
+                f.close()
+            lines.append('{}|{}|{}'.format(basename, text, sid))
+        with open(metadata, 'wt') as f:
+            f.writelines('\n'.join(lines))
+            f.close()
 
 
 class Preprocessor:
