@@ -1,7 +1,7 @@
 import os
 import argparse
 import random
-import preprocessors.libritts as libritts
+import preprocessors.libritts.Preprocessor as libritts
 
 
 def make_train_files(out_dir, datas):
@@ -33,6 +33,7 @@ def make_folders(out_dir):
 
 
 def main(data_dir, out_dir):
+    
     libritts.write_metadata(data_dir, out_dir)
     make_folders(out_dir)
     datas = libritts.build_from_path(data_dir, out_dir)
@@ -43,6 +44,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, default='dataset/')
     parser.add_argument('--output_path', type=str, default='dataset/')
+    #parser.add_argument('--config_path', type=str, default='configs/')
     args = parser.parse_args()
 
     main(args.data_path, args.output_path)
