@@ -1,6 +1,7 @@
 import os
 import argparse
 import random
+import json
 import preprocessors.libritts as libritts
 
 
@@ -32,11 +33,12 @@ def make_folders(out_dir):
         os.makedirs(energy_out_dir, exist_ok=True)
 
 
-def main(data_dir, out_dir, config_path):
+def main(data_dir, out_dir, config):
  
-    libritts.Preprocessor(config_path).write_metadata(data_dir, out_dir)
+    libri=libritts.Preprocessor(config)            #object created
+    libri.write_metadata(data_dir, out_dir)
     make_folders(out_dir)
-    datas = libritts.Preprocessor(config_path).build_from_path(data_dir, out_dir)
+    datas = libri.build_from_path(data_dir, out_dir)
     make_train_files(out_dir, datas)
 
 
@@ -44,7 +46,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--data_path', type=str, default='dataset/')
     parser.add_argument('--output_path', type=str, default='dataset/')
-    parser.add_argument('--config_path', type=str, default='configs/')
+    parser.add_argument('--config_path', type=str, default='configs/config.json')
     args = parser.parse_args()
 
-    main(args.data_path, args.output_path, args.config_path)
+    config = None
+    with open(args.config_path, 'r') as f:
+      config = f.read()
+    config = json.loads(config)
+
+    main(args.data_path, args.output_path, config)
